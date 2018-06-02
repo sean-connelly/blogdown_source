@@ -1,0 +1,24 @@
+---
+title: "First GitHub Pages Post!"
+author: ~
+date: "2018-05-04"
+draft: false
+slug: first-post-rmd
+categories: ["R"]
+tags: ["Introduction","Hugo","Github Pages"]
+autoThumbnailImage: false
+thumbnailImagePosition: "top"
+thumbnailImage: //d1u9biwaxjngwg.cloudfront.net/welcome-to-tranquilpeak/city-750.jpg
+coverImage: //d1u9biwaxjngwg.cloudfront.net/welcome-to-tranquilpeak/city.jpg
+---
+
+# New Home
+
+Hi there - how do you like the new digs? After a brief hiatus during grad school application season, I found myself ready to dive back into data, but extremely frustrated with GitHub documents as a medium to share my work. Enter blogdown and GitHub Pages! The blogdown R package makes it easy to create a website using nothing but R Markdown, and then host it on your free personal GitHub URL.
+
+This page is *miles* better than what I was originally using: it's highly customizable, compatible with other HTML elements, and doesn't require bending over backwards to publish attractive code. Don't be surprised to see tweaks the site appearance as I continue to play with the design. Tyler Clavelle's [article](https://tclavelle.github.io/blog/blogdown_github/) was indispensable in the setup process, I highly recommend checking it out if you would like to create your own page.
+
+Anyway, watch this space for posts sometime later this month. For posterity, you can access my two previous write-ups using the links below:
+
+* [Divvy rides in 2016](https://github.com/sean-connelly/Divvy/blob/master/Divvy.md)
+* [What would SB 827 (RIP) look like in NYC?](https://github.com/sean-connelly/Zoning/blob/master/Zoning.md)
