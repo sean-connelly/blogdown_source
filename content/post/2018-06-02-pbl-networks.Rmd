@@ -100,7 +100,8 @@ plot_facet
 
 ```
 <!--The text below wrapped around the tmap no matter what HTML I used, except for this manual hack to force output on to a new line--> 
-<!-- <font color="white">.<p>.<p>.<p>.<p>.<p>.<p>.<p>.<p>.<p>.<p>.<p>.<p>.<p>..<p>.<p>.<p>.<p>. -->
+<font color="white">.<p>.<p>.</font>
+<!-- <p>.<p>.<p>.<p>.<p>.<p>.<p>.<p>.<p>.<p>.<p>..<p>.<p>.<p>.<p>. -->
 <!-- <p>.<p>.<p>.<p>.<p>.<p>.<p>.<p>.<p>..<p>.<p>.<p>.<p>.<p>.<p>.<p>.<p>.<p>.<p>.<p>.<p>.<p>. -->
 <!-- <p>.</font> -->
 
@@ -206,7 +207,7 @@ plot_dc <- ggplot() +
 
 
 
-```{r pdx gif,echo=T}
+```{r pdx gif,echo=T,fig.show='animate',ffmpeg.format='gif',dev='jpeg'}
 
 #=============
 #Create gifs
@@ -216,53 +217,44 @@ plot_dc <- ggplot() +
 animation::ani.options(interval = .5)
 
 #Portland
-gganimate(plot_pdx,ani.width =  1000,ani.height = 800,
-          "plot_pdx.gif",title_frame = T)
+gganimate(plot_pdx,ani.width =  1000,ani.height = 800,title_frame = T)
 
 ```
 
 
 
-```{r sfca gif,echo=T}
+```{r sfca gif,echo=T,fig.show='animate',ffmpeg.format='gif',dev='jpeg'}
 
 #Set animation interval at 1/2 second
 animation::ani.options(interval = .5)
 
 #San Francisco
-gganimate(plot_sfca,ani.width =  1000,ani.height = 800,
-          "plot_sfca.gif",title_frame = T)
+gganimate(plot_sfca,ani.width =  1000,ani.height = 800,title_frame = T)
 
 ```
 
 
 
-```{r seattle gif,echo=T}
+```{r seattle gif,echo=T,fig.show='animate',ffmpeg.format='gif',dev='jpeg'}
 
 #Set animation interval at 1/2 second
 animation::ani.options(interval = .5)
 
 #Seattle
-gganimate(plot_seattle,ani.width =  1000,ani.height = 800,
-          "plot_seattle.gif",title_frame = T)
+gganimate(plot_seattle,ani.width =  1000,ani.height = 800,title_frame = T)
 
 ```
 
 
 
-```{r dc gif,echo=T}
+```{r dc gif,echo=T,fig.show='animate',ffmpeg.format='gif',dev='jpeg'}
 
 #Set animation interval at 1/2 second
 animation::ani.options(interval = .5)
 
 #Washington DC
-gganimate(plot_dc,ani.width =  1000,ani.height = 800,
-          "plot_dc.gif",title_frame = T)
+gganimate(plot_dc,ani.width =  1000,ani.height = 800,title_frame = T)
 
 ```
-
-![ ](2018-06-02-pbl-networks-figures/plot_pdx.gif)
-![ ](2018-06-02-pbl-networks-figures/plot_sfca.gif)
-![ ](2018-06-02-pbl-networks-figures/plot_seattle.gif)
-![ ](2018-06-02-pbl-networks-figures/plot_dc.gif)
 
 I could stare at these all day. Anyway, now we can add GIFs to our R data viz locker. Maybe we could experiment with some of the true bike capitals in Europe and South America next?
