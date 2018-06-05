@@ -27,8 +27,6 @@ library(animation);library(gganimate)  #devtools::install_github("yihui/animatio
 
 options(scipen = 1000,stringsAsFactors = F)
 
-setwd("E:/Data/PBL-Networks")
-
 ```
 <p>
 It's finally summertime here in New York, which means bike season is upon us. Since the turn of the millennium, cycling as a mode of transportation has exploded in the US; the [Census Bureau](https://www.census.gov/newsroom/press-releases/2014/cb14-86.html) recorded a 60 percent increase in bike commuting between 2000 and 2012. This increase in participation has gone hand in hand with the expansion of biking facilities and infrastructure. According to the ever reliable [Thrillist](https://www.thrillist.com/travel/nation/most-bike-friendly-cities-in-the-us), here are "The Best Cities in America for Cyclists", in no particular order:
@@ -100,10 +98,8 @@ plot_facet
 
 ```
 <!--The text below wrapped around the tmap no matter what HTML I used, except for this manual hack to force output on to a new line--> 
-<font color="white">.<p>.<p>.</font>
-<!-- <p>.<p>.<p>.<p>.<p>.<p>.<p>.<p>.<p>.<p>.<p>..<p>.<p>.<p>.<p>. -->
-<!-- <p>.<p>.<p>.<p>.<p>.<p>.<p>.<p>.<p>..<p>.<p>.<p>.<p>.<p>.<p>.<p>.<p>.<p>.<p>.<p>.<p>.<p>. -->
-<!-- <p>.</font> -->
+<font color="white">.<p>.<p>.<p>.<p>.<p>.<p>.<p>.<p>.<p>.<p>.<p>.<p>.<p>.<p>.<p>.
+<p>.<p>.<p>.<p>.<p>.<p>.<p></font>
 
 A couple of initial observations: 1) I'm surprised that NYC's infrastructure is so sparse and 2) given the Bay Area's reputation I would have thought bike lanes were all over the place, though maybe this is due to topography more than anything else. These maps display the current cycling network; how has it evolved over time? One way to answer this question is by plotting cumulative mileage by installation year. Unfortunately, New York and Madison do not track miles added, so they are excluded from here on out. We can plot network miles using the code chunk below: 
 
@@ -207,7 +203,7 @@ plot_dc <- ggplot() +
 
 
 
-```{r pdx gif,echo=T,fig.show='animate',ffmpeg.format='gif',dev='jpeg'}
+```{r pdx gif,echo=T,fig.show="animate",ffmpeg.format='gif',dev='jpeg'}
 
 #=============
 #Create gifs
@@ -217,44 +213,49 @@ plot_dc <- ggplot() +
 animation::ani.options(interval = .5)
 
 #Portland
-gganimate(plot_pdx,ani.width =  1000,ani.height = 800,title_frame = T)
+gganimate(plot_pdx,"plot_pdx.gif",ani.width =  1000,ani.height = 800,title_frame = T)
 
 ```
 
 
 
-```{r sfca gif,echo=T,fig.show='animate',ffmpeg.format='gif',dev='jpeg'}
+```{r sfca gif,echo=T,fig.show="animate",ffmpeg.format='gif',dev='jpeg'}
 
 #Set animation interval at 1/2 second
 animation::ani.options(interval = .5)
 
 #San Francisco
-gganimate(plot_sfca,ani.width =  1000,ani.height = 800,title_frame = T)
+gganimate(plot_sfca,"plot_sfca.gif",ani.width =  1000,ani.height = 800,title_frame = T)
 
 ```
 
 
 
-```{r seattle gif,echo=T,fig.show='animate',ffmpeg.format='gif',dev='jpeg'}
+```{r seattle gif,echo=T,fig.show="animate",ffmpeg.format='gif',dev='jpeg'}
 
 #Set animation interval at 1/2 second
 animation::ani.options(interval = .5)
 
 #Seattle
-gganimate(plot_seattle,ani.width =  1000,ani.height = 800,title_frame = T)
+gganimate(plot_seattle,"plot_seattle.gif",ani.width =  1000,ani.height = 800,title_frame = T)
 
 ```
 
 
 
-```{r dc gif,echo=T,fig.show='animate',ffmpeg.format='gif',dev='jpeg'}
+```{r dc gif,echo=T,fig.show="animate",ffmpeg.format='gif',dev='jpeg'}
 
 #Set animation interval at 1/2 second
 animation::ani.options(interval = .5)
 
 #Washington DC
-gganimate(plot_dc,ani.width =  1000,ani.height = 800,title_frame = T)
+gganimate(plot_dc,"plot_dc.gif",ani.width =  1000,ani.height = 800,title_frame = T)
 
 ```
+
+![](/post/2018-06-02-pbl-networks_files/plot_pdx.gif)
+![](/post/2018-06-02-pbl-networks_files/plot_sfca.gif)
+![](/post/2018-06-02-pbl-networks_files/plot_seattle.gif)
+![](/post/2018-06-02-pbl-networks_files/plot_dc.gif)
 
 I could stare at these all day. Anyway, now we can add GIFs to our R data viz locker. Maybe we could experiment with some of the true bike capitals in Europe and South America next?
