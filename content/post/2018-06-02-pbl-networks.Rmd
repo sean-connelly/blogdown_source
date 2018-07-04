@@ -203,7 +203,7 @@ plot_dc <- ggplot() +
 
 
 
-```{r pdx gif,echo=T,fig.show="animate",ffmpeg.format='gif',dev='jpeg'}
+```{r pdx gif,eval=F,echo=T,fig.show="animate",ffmpeg.format='gif',dev='jpeg'}
 
 #=============
 #Create gifs
@@ -219,7 +219,7 @@ gganimate(plot_pdx,"plot_pdx.gif",ani.width =  1000,ani.height = 800,title_frame
 
 
 
-```{r sfca gif,echo=T,fig.show="animate",ffmpeg.format='gif',dev='jpeg'}
+```{r sfca gif,eval=F,echo=T,fig.show="animate",ffmpeg.format='gif',dev='jpeg'}
 
 #Set animation interval at 1/2 second
 animation::ani.options(interval = .5)
@@ -231,7 +231,7 @@ gganimate(plot_sfca,"plot_sfca.gif",ani.width =  1000,ani.height = 800,title_fra
 
 
 
-```{r seattle gif,echo=T,fig.show="animate",ffmpeg.format='gif',dev='jpeg'}
+```{r seattle gif,eval=F,echo=T,fig.show="animate",ffmpeg.format='gif',dev='jpeg'}
 
 #Set animation interval at 1/2 second
 animation::ani.options(interval = .5)
@@ -243,7 +243,7 @@ gganimate(plot_seattle,"plot_seattle.gif",ani.width =  1000,ani.height = 800,tit
 
 
 
-```{r dc gif,echo=T,fig.show="animate",ffmpeg.format='gif',dev='jpeg'}
+```{r dc gif,eval=F,echo=T,fig.show="animate",ffmpeg.format='gif',dev='jpeg'}
 
 #Set animation interval at 1/2 second
 animation::ani.options(interval = .5)

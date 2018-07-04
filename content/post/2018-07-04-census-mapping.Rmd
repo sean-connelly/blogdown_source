@@ -1,0 +1,206 @@
+---
+title: "Voters' Windshield Perspective"
+subtitle: "Mapping Mode Share in NY-14 with Tidycensus"
+author: ~
+date: "2018-07-04"
+draft: false
+slug: census-mapping-rmd
+categories: ["R"]
+tags: ["Transit","Congress","SF","Tidycensus"]
+autoThumbnailImage: false
+thumbnailImagePosition: "top"
+thumbnailImage: http://res.cloudinary.com/dfngkha36/image/upload/c_scale,h_400,w_750/v1530733042/StockSnap_CensusMapping.jpg
+coverImage: http://res.cloudinary.com/dfngkha36/image/upload/c_scale,w_1920/v1530733042/StockSnap_CensusMapping.jpg
+---
+<p>
+Happy Fourth of July! Given the holiday, I thought it would be fitting to look at the intersection of politics and transportation. Last week, Alexandria Ocasio-Cortez, a 28-year-old democratic socialist, defeated Joe Crowley, the incumbent who was tapped as the next Democratic House Speaker, in the New York 14th Congressional District (NY-14) primary. Ocasio-Cortez's victory made national news, which is no surprise given the natural story lines (grassroots versus establishment, etc.), but one particular aspect of her campaign has gotten an unusual amount of attention - her advertisement.
+
+Ocasio-Cortez posted a video ad about a month before election day, and it's fair to say it made an impression - at the time of writing, it has close to [500,000 views](https://www.youtube.com/watch?v=rq3QXIVR0bs). What struck me is how, well, *normal* the candidate is; every New Yorker can relate to the shots of bodegas, parks, apartments and subway trains. Even the New York Times' post-election [autopsy](https://www.nytimes.com/2018/06/27/nyregion/ocasio-cortez-crowley-primary-upset.html) highlights this fact:  
+
+>She [Ocasio-Cortez] rode subway trains in hers. He [Crowley] drove a car in his.
+
+There have been a lot of great write-ups breaking down the election, but I particularly like [The Intercept's](https://theintercept.com/2018/07/01/ocasio-cortez-data-suggests-that-gentrifying-neighborhoods-powered-alexandria-ocasio-cortezs-victory-over-the-democratic-establishment/), which includes awesome precinct-level maps prepared by the City University of New York's Center for Urban Research. The demographic data suggests that Ocasio-Cortez's support was actually strongest in gentrifying, mixed neighborhoods. The transit nerd in me is curious if there was also a correlation with commuting mode - straphangers for Ocasio-Cortez, drivers for Crowley.
+
+The US Census Bureau tracks "Means of Transportation" in the Census and American Community Survey (ACS). Kyle Walker, a Geography professor at TCU, developed the incredible [tidycensus](https://github.com/walkerke/tidycensus) package, which allows us to pull data from the Census and ACS for any desired area. I'm going to use the ACS to grab mode share numbers simply because it offers a more recent snapshot of the district, but we should be cautious since the ACS only provides an estimate - I suggest Walker's [explanation](https://walkerke.github.io/tidycensus/articles/margins-of-error.html) if you would like to learn more. Anyway, the code chunk below grabs the variables we are interested in, and subsets the data to only those Census Tracts entirely within NY-14:  
+
+```{r setup,message=F,comment=F,warning=F,echo=T}
+
+knitr::opts_chunk$set(message = F,warning = F,fig.align = "center")
+
+library(hrbrthemes);library(tidyverse)
+library(tidycensus);library(USAboundaries);library(ggmap)
+library(lubridate);library(viridis);library(scales)
+library(sf);library(tigris);library(janitor)
+
+#Options, call stored Census API key you'll have to set one up if you don't have already
+options(scipen = 1000,stringsAsFactors = F,tigris_use_cache = T)
+invisible(Sys.getenv("CENSUS_API_KEY"))
+
+```
+
+
+
+```{r import,echo=T}
+
+#=============
+#Import census data
+#=============
+
+#Means of transportation variables
+transport_vars <- c("Car"         =   "B08301_002",
+                    "Transit"     =   "B08301_010",
+                    "Taxi"        =   "B08301_016",
+                    "Motorcycle"  =   "B08301_017",     
+                    "Bicycle"     =   "B08301_018",
+                    "Walk"        =   "B08301_019",
+                    "Other"       =   "B08301_020",
+                    "Home"        =   "B08301_021")
+  
+#Grab mode share data from 2012-2016 ACS for Queens and the Bronx
+ny14 <- get_acs(state = "NY",county = c("Queens","Bronx"),geography = "tract",
+                variables = transport_vars,geometry = T,cb = F) %>% 
+  st_transform(4326)
+
+#=============
+#Make sure spatial geometries are right (clip water, within NY-14)
+#=============
+
+#Clip tract boundaries to water line (from Kyle Walker's package vignette)
+st_erase <- function(x, y) { st_difference(x, st_union(st_combine(y))) }
+
+queens_water <- area_water(state = "NY",county = "Queens",class = "sf") %>%
+  st_transform(4326)
+bronx_water <- area_water(state = "NY",county = "Bronx",class = "sf") %>%
+  st_transform(4326)
+
+ny14 <- st_erase(ny14,queens_water)
+ny14 <- st_erase(ny14,bronx_water)
+
+#Load NY-14 Congressional District
+ny_congress <- us_congressional(states = "New York",resolution = "high") %>% 
+  filter(cd115fp=="14") %>% 
+  select(cd115fp) %>% 
+  st_transform(4326)
+
+#Restrict transit data to tracts entirely within NY-14
+ny14 <- st_join(ny14,ny_congress,join = st_within,left = F)
+
+#=============
+#Tweak fields
+#=============
+
+#Drop MOE for this case, really using estimates for illustrative purposes
+#Collapse modes into desired groups
+ny14 <- ny14 %>% 
+  select(-moe,-cd115fp) %>% 
+  spread(variable,estimate,fill = 0) %>% 
+  mutate("PMV" = Car + Motorcycle) %>% 
+  select(GEOID,NAME,PMV,Transit,Bicycle,Walk,Taxi,Home)
+
+head(ny14)
+
+```
+<p>
+Now that we've got mode share by Census Tract, we have to decide how to visualize it. Choropleths can be great - they can display the majority mode or candidate or race for a given geographic area, but our main focus here is on individuals, rather than generalizing by tract. Dot density maps, in which a dot symbolizing a certain number of people is plotted at random within a specific spatial shape, do a good job representing the complexity on the ground. The dominant mode share should change along a gradient, rather than a discrete scale. The algorithm below is used to generate these dots for NY-14, and is lifted directly from Paul Campbell's excellent [blog post](https://www.cultureofinsight.com/blog/2018/05/02/2018-04-08-multivariate-dot-density-maps-in-r-with-sf-ggplot2/):
+
+```{r dots,echo=T}
+
+#=============
+#Generate dots
+#=============
+
+#This code chunk is from Paul Campbell's Culture of Insight post:
+#https://www.cultureofinsight.com/blog/2018/05/02/2018-04-08-multivariate-dot-density-maps-in-r-with-sf-ggplot2/
+#Round number of dots randomly
+random_round <- function(x) {
+    v = as.integer(x)
+    r = x - v
+    test = runif(length(r), 0.0, 1.0)
+    add = rep(as.integer(0),length(r))
+    add[r>test] <- as.integer(1)
+    value = v + add
+    ifelse(is.na(value) | value<0,0,value)
+    return(value)
+  }
+
+#Number of dots to plot for each mode (1 for every 100 people)
+num_dots <- as.data.frame(ny14) %>% 
+  select(PMV:Home) %>% 
+  mutate_all(funs(as.numeric(.)/100)) %>% 
+  mutate_all(random_round)
+
+#Generates coordinates for each point + what mode it represents
+ny14_dots <- map_df(names(num_dots), 
+                    ~ st_sample(ny14,size = num_dots[,.x],type = "random") %>%
+                      st_cast("POINT") %>%                  
+                      st_coordinates() %>%                                          
+                      as_tibble() %>%
+                      setNames(c("lon","lat")) %>%
+                      mutate(Mode = .x)) %>%
+  slice(sample(1:n())) #Randomize plot order
+
+#Make mode a factor for plotting
+ny14_dots <- ny14_dots %>% 
+  mutate(Mode = as_factor(Mode) %>% 
+           fct_relevel("PMV","Transit","Walk","Bicycle","Taxi","Home"))
+
+head(ny14_dots)
+
+```
+<p>
+Armed with the dots data frame, we can now plot our map:
+
+```{r map,eval=F,echo=T}
+
+#=============
+#Dot density map
+#=============
+
+#Color palette
+pal <- c("PMV" = "#d18975",
+         "Transit" = "#8fd175",
+         "Walk" = "#3f2d54",
+         "Bicycle" = "#75b8d1",
+         "Taxi" = "#2d543d",
+         "Home" = "#c9d175") 
+
+#Basemap for district
+bbox <- st_bbox(ny_congress) %>%
+  as.vector()
+  
+basemap <- get_map(location = bbox,zoom = 12,color = "bw")
+
+#Plot dot density
+plot_ny14 <- ggmap(basemap) +
+  geom_sf(data = ny_congress,fill = "transparent",color = "goldenrod",
+          size = 1.5,inherit.aes = F) +
+  geom_point(data = ny14_dots,aes(lon,lat,color = Mode),
+             size = 1,inherit.aes = F) +
+  scale_color_manual(values = pal) +
+  coord_sf(datum = NA) +
+  labs(x = NULL, y = NULL,
+       title = "How NY-14 Commutes\n",
+       subtitle = "1 dot = 100 people",
+       caption = "Data Source: 2012-2016 ACS") +
+  theme_ipsum(grid = F,base_size = 16,plot_title_size = 16,subtitle_size = 16,
+              caption_size = 16,strip_text_size = 16,axis_text_size = 16) +
+  guides(color = guide_legend(override.aes = list(size = 5))) +
+  theme(axis.text.x = element_blank(),
+        axis.text.y = element_blank(),
+        legend.text = element_text(size = 16)) +
+  theme(legend.position = c(0.8,1.035),legend.direction = "horizontal")
+
+#Save high resolution picture 
+ggsave("2018-07-04-census-mapping_files/ny14_points.png",
+       plot = plot_ny14,dpi = 640,width = 12, height = 12, units = "in")
+
+```
+
+![ ](/post/2018-07-04-census-mapping_files/ny14_points.png)
+
+And here is the precinct breakdown from The Intercept article:
+<p>
+![ ](https://theintercept.imgix.net/wp-uploads/sites/1/2018/06/Screen-Shot-2018-06-29-at-3.17.39-PM-1530299880.png?auto=compress%2Cformat&q=90)
+<p>
+At a glance, things seem to line up pretty well. Neighborhoods where more people drive a private motor vehicle, or PMV, to work (more red than green) tended to also vote for Crowley, while places where individuals have more sustainable and active commutes (green, purple, blue) correspond with areas that went to Ocasio-Cortez. Transportation mode may not be the most predictive variable, but looking at how people get to work can provide some additional prospective.
+
