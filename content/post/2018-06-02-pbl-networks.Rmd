@@ -149,7 +149,7 @@ Each city has added miles of bike lanes at a steady clip since 2000, which is ve
 
 Finally, I want to create a GIF to show the geographic expansion of good bike infrastructure over time. There are tons of awesome animations for subway systems - [Chinese](https://www.huffingtonpost.com/2014/12/29/beijing-subway-expansion_n_6389002.html) investment in transit puts the US to shame - so why not try one for cycling? Now there aren't necessarily color-coded "lines" like in rail or bus rapid transit, but we can make sure that each city matches with the mileage chart like so: 
 
-```{r animated,echo=T}
+```{r animated,echo=T,eval=F}
 
 #=============
 #Animated ggplot maps
