@@ -15,7 +15,7 @@ coverImage: http://res.cloudinary.com/dfngkha36/image/upload/c_scale,w_1920/v152
 ```{r setup,include=F,echo=F}
 
 knitr::opts_chunk$set(message = F,warning = F,fig.width = 10,fig.align = "center")
-tmap::tmap_options(tmap.limits = c(facets.plot = 64,facets.view = 10))
+tmap::tmap_options(limits = c(facets.plot = 64,facets.view = 10))
 
 library(hrbrthemes);library(tidyverse) #devtools::install_github("hadley/ggplot2")
 library(stringr);library(lubridate)
@@ -101,7 +101,7 @@ plot_facet
 <font color="white">.<p>.<p>.<p>.<p>.<p>.<p>.<p>.<p>.<p>.<p>.<p>.<p>.<p>.<p>.<p>.
 <p>.<p>.<p>.<p>.<p>.<p>.<p></font>
 
-A couple of initial observations: 1) I'm surprised that NYC's infrastructure is so sparse and 2) given the Bay Area's reputation I would have thought bike lanes were all over the place, though maybe this is due to topography more than anything else. These maps display the current cycling network; how has it evolved over time? One way to answer this question is by plotting cumulative mileage by installation year. Unfortunately, New York and Madison do not track miles added, so they are excluded from here on out. We can plot network miles using the code chunk below: 
+A couple of initial observations: 1) I'm surprised that NYC's infrastructure is so sparse and 2) given the Bay Area's reputation, I would have thought bike lanes were all over the place, though maybe this is due to topography more than anything else. These maps display the current cycling network - how has it evolved over time? One way to answer this question is by plotting cumulative mileage by installation year. Unfortunately, New York and Madison do not track miles added, so they are excluded from here on out. We can plot network miles using the code chunk below: 
 
 ```{r mileage,echo=T}
 
@@ -147,7 +147,7 @@ plot_miles
 <p>
 Each city has added miles of bike lanes at a steady clip since 2000, which is very encouraging. Washington DC's progress is especially notable; they built only 3 miles of high quality bike infrastructure in the 20th century, but their network clocked in at 78 miles by the end of 2016. Portland, as expected, is simply in a different class. They had a ridiculous 175 miles already in place by 2000. As of 2016, the Portland Bureau of Transportation (PBOT) had constructed a 279 mile low-stress network, and the agency is now preparing to make protected bike lanes the [design standard](https://usa.streetsblog.org/2018/05/25/portland-plans-to-make-protected-bike-lanes-standard-street-infrastructure/).
 
-Finally, I want to create a GIF to show the geographic expansion of good bike infrastructure over time. There are tons of awesome animations for subway systems - [Chinese](https://www.huffingtonpost.com/2014/12/29/beijing-subway-expansion_n_6389002.html) investment in transit puts the US to shame - so why not try one for cycling? Now there aren't necessarily color-coded "lines" like in rail or bus rapid transit, but we can make sure that each city matches with the mileage chart like so: 
+Finally, I want to create a GIF to show the geographic expansion of good bike infrastructure over time. There are tons of awesome animations for subway systems - [Chinese](https://www.huffingtonpost.com/2014/12/29/beijing-subway-expansion_n_6389002.html) investment in transit puts the US to shame - so why not try one for cycling? Now, there aren't necessarily color-coded "lines" like in rail or bus rapid transit, but we can make sure that each city matches with the mileage chart like so: 
 
 ```{r animated,echo=T,eval=F}
 
