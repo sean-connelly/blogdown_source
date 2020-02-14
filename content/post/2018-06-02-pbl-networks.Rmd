@@ -53,12 +53,12 @@ To accomplish the above, we need data on the facility type, length, installation
 #=============
 
 #Bike networks
-dc <- st_read("E:/Data/PBL-Networks/Shapefiles/Washington.shp",quiet = T)
-seattle <- st_read("E:/Data/PBL-Networks/Shapefiles/Seattle.shp",quiet = T)
-nyc <- st_read("E:/Data/PBL-Networks/Shapefiles/New_York_City.shp",quiet = T)
-madison <- st_read("E:/Data/PBL-Networks/Shapefiles/Madison.shp",quiet = T)
-sfca <- st_read("E:/Data/PBL-Networks/Shapefiles/San_Francisco.shp",quiet = T)
-pdx <- st_read("E:/Data/PBL-Networks/Shapefiles/Portland.shp",quiet = T)
+dc <- st_read("E:/Data/PBL_Networks/Shapefiles/Washington.shp",quiet = T)
+seattle <- st_read("E:/Data/PBL_Networks/Shapefiles/Seattle.shp",quiet = T)
+nyc <- st_read("E:/Data/PBL_Networks/Shapefiles/New_York_City.shp",quiet = T)
+madison <- st_read("E:/Data/PBL_Networks/Shapefiles/Madison.shp",quiet = T)
+sfca <- st_read("E:/Data/PBL_Networks/Shapefiles/San_Francisco.shp",quiet = T)
+pdx <- st_read("E:/Data/PBL_Networks/Shapefiles/Portland.shp",quiet = T)
 
 #Combine into one frame
 bike_net <- rbind(dc,seattle,nyc,madison,sfca,pdx) %>% 
@@ -252,10 +252,12 @@ animation::ani.options(interval = .5)
 gganimate(plot_dc,"plot_dc.gif",ani.width =  1000,ani.height = 800,title_frame = T)
 
 ```
-
 ![](/post/2018-06-02-pbl-networks_files/plot_pdx.gif)
+
 ![](/post/2018-06-02-pbl-networks_files/plot_sfca.gif)
+
 ![](/post/2018-06-02-pbl-networks_files/plot_seattle.gif)
+
 ![](/post/2018-06-02-pbl-networks_files/plot_dc.gif)
 
 I could stare at these all day. Anyway, now we can add GIFs to our R data viz locker. Maybe we could experiment with some of the true bike capitals in Europe and South America next?

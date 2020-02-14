@@ -23,7 +23,7 @@ There have been a lot of great write-ups breaking down the election, but I parti
 
 The US Census Bureau tracks "Means of Transportation" in the Census and American Community Survey (ACS). Kyle Walker, a Geography professor at TCU, developed the incredible [tidycensus](https://github.com/walkerke/tidycensus) package, which allows us to pull data from the Census and ACS for any desired area. I'm going to use the ACS to grab mode share numbers simply because it offers a more recent snapshot of the district, but we should be cautious since the ACS only provides an estimate - I suggest Walker's [explanation](https://walkerke.github.io/tidycensus/articles/margins-of-error.html) if you would like to learn more. Anyway, the code chunk below grabs the variables we are interested in, and subsets the data to only those Census Tracts entirely within NY-14:  
 
-```{r setup,message=F,comment=F,warning=F,echo=T}
+```{r setup,message=F,comment=F,warning=F,eval=F,echo=T}
 
 knitr::opts_chunk$set(message = F,warning = F,fig.align = "center")
 
@@ -40,7 +40,7 @@ invisible(Sys.getenv("CENSUS_API_KEY"))
 
 
 
-```{r import,echo=T}
+```{r import,eval=F,echo=T}
 
 #=============
 #Import census data
@@ -100,10 +100,12 @@ ny14 <- ny14 %>%
 head(ny14)
 
 ```
+
+![](/post/2018-07-04-census-mapping_files/head_ny14.png)
 <p>
 Now that we've got mode share by Census Tract, we have to decide how to visualize it. Choropleths can be great - they can display the majority mode or candidate or race for a given geographic area, but our main focus here is on individuals, rather than generalizing by tract. Dot density maps, in which a dot symbolizing a certain number of people is plotted at random within a specific spatial shape, do a good job representing the complexity on the ground. The dominant mode share should change along a gradient, rather than a discrete scale. The algorithm below is used to generate these dots for NY-14, and is lifted directly from Paul Campbell's excellent [blog post](https://www.cultureofinsight.com/blog/2018/05/02/2018-04-08-multivariate-dot-density-maps-in-r-with-sf-ggplot2/):
 
-```{r dots,echo=T}
+```{r dots,eval=F,echo=T}
 
 #=============
 #Generate dots
@@ -147,6 +149,8 @@ ny14_dots <- ny14_dots %>%
 head(ny14_dots)
 
 ```
+
+![](/post/2018-07-04-census-mapping_files/head_ny14dots.png)
 <p>
 Armed with the dots data frame, we can now plot our map:
 
