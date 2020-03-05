@@ -151,6 +151,7 @@ head(ny14_dots)
 ```
 
 ![](/post/2018-07-04-census-mapping_files/head_ny14dots.png)
+
 <p>
 Armed with the dots data frame, we can now plot our map:
 
@@ -201,6 +202,7 @@ ggsave("2018-07-04-census-mapping_files/ny14_points.png",
 ```
 
 ![ ](/post/2018-07-04-census-mapping_files/ny14_points.png)
+
 
 And here is the precinct breakdown from The Intercept article:
 <p>

@@ -37,6 +37,9 @@
           {{ .Title }}
         </a>
       </h1>
+      <h5 class="postShorten-subtitle">
+      {{ with .Params.subtitle }}{{ . }}{{ end }}
+      </h5>
       {{ partial "post/meta" . }}
     </div>
     <div class="postShorten-excerpt" itemprop="articleBody">
