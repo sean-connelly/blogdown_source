@@ -35,7 +35,7 @@ ignoreFiles = ["\\.Rmd$", "\\.Rmarkdown$", "_files$", "_cache$"]
 [author]
   name = "Sean Connelly"
   bio = "Recovering civil servant and data nerd who took the long way home <br> CHI > BOS > LDN > NYC > CHI"
-  job = "Masters in Urban Planning and Policy student at UIC"
+  job = "Research Specialist at UIC's Voorhees Center"
   location = "Chicago, IL, USA"
   # Your Gravatar email. Overwrite `author.picture` everywhere in the blog
   gravatarEmail = "sconnelly005@gmail.com"
